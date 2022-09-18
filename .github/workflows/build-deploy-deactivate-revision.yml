@@ -13,9 +13,9 @@ permissions:
   # id-token: write
 
 env:
-  CONTAINER_REGISTRY: acrhihorikarevisions.azurecr.io
-  RESOURCE_GROUP_NAME: rg-aca-revision-deploy
-  CONTAINERAPP_NAME: ctapp-aca-revision-deploy2
+  CONTAINER_REGISTRY: acrhihorikarevisions.azurecr.io # TODO: container registry name like `foobar.azurecr.io`
+  RESOURCE_GROUP_NAME: rg-aca-revision-deploy         # TODO: Azure Container Apps resource name
+  CONTAINERAPP_NAME: ctapp-aca-revision-deploy2       # TODO: resource group name where the target Azure Container Apps resource in.
 
 jobs:
   add-revision:
