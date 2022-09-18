@@ -51,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
+          tags: ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.event.pull_request.head.sha }}
           file: ./Dockerfile
           context: ./
 
@@ -67,7 +67,7 @@ jobs:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
           name: ${{ env.CONTAINERAPP_NAME }}
           revision-name-suffix: ${{ env.SHORT_HASH }}
-          image: ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
+          image: ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.event.pull_request.head.sha }}
 
       - name: add new comment to PR
         uses: peter-evans/create-or-update-comment@v2
@@ -101,8 +101,8 @@ jobs:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
           name: ${{ env.CONTAINERAPP_NAME }}
           revision-name-suffix: ${{ env.SHORT_HASH }}
-          image: "ANY_VALUE" # ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
           deactivate-revision-mode: true
+          image: "THIS_VALUE_IS_IGNORED_IN_DEACTIVATION_MODE"
 
       - name: Find Comment
         uses: peter-evans/find-comment@v2
@@ -117,5 +117,6 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
           body: |
             Reivision ${{ env.CONTAINERAPP_NAME }}--${{ env.SHORT_HASH }} is deactivated.
