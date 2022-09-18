@@ -1,0 +1,1 @@
+FROM wouterm/helloworld:latest
