@@ -31,7 +31,7 @@ jobs:
         run: | 
           echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
-          echo "PR_NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')"
+          echo "PR_NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')" >> $GITHUB_ENV
 
       - name: Log in to container registry
         uses: docker/login-action@v1
@@ -78,10 +78,17 @@ jobs:
         run: | 
           echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
           echo "SHORT_SHA=${SHA:0:7}" >> $GITHUB_ENV
+          echo "PR_NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')" >> $GITHUB_ENV
           echo ${SHORT_SHA}
+          echo ${PR_NUMBER}
         env:
           SHA: ${{ github.event.pull_request.head.sha }}
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
       - name: Deactivate Preview revision on ACA
         uses: horihiro/aca-preview@v0.0.1-alpha2
         with:
@@ -90,3 +97,10 @@ jobs:
           revision-name-suffix: ${{ env.SHORT_SHA }}
           image: "ANY_VALUE" # ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
           deactivate-revision-mode: true
+
+      - name: add new comment to PR
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ env.PR_NUMBER }}
+          body: |
+            closed.
