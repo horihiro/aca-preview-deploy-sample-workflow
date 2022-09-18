@@ -1,9 +1,6 @@
-name: Trigger auto deployment
+name: Build, Deploy and Deactivate ACA revision
 
 on:
-  # 手動実行用トリガー
-  workflow_dispatch:      
-
   pull_request:
     types: [opened, closed]
 
@@ -36,7 +33,6 @@ jobs:
         run: | 
           echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
           echo "SHORT_HASH=${COMMIT_HASH:0:7}" >> $GITHUB_ENV
-          echo "PR_NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')" >> $GITHUB_ENV
         env:
           COMMIT_HASH: ${{ github.event.pull_request.head.sha }}
 
@@ -86,7 +82,6 @@ jobs:
         run: | 
           echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
           echo "SHORT_HASH=${COMMIT_HASH:0:7}" >> $GITHUB_ENV
-          echo "PR_NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')" >> $GITHUB_ENV
         env:
           COMMIT_HASH: ${{ github.event.pull_request.head.sha }}
 
