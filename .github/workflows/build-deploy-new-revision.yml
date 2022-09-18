@@ -4,6 +4,9 @@ on:
   # 手動実行用トリガー
   workflow_dispatch:      
 
+  pull_request:
+    types: [opened, closed]
+
 env:
   CONTAINER_REGISTRY: acrhihorikarevisions.azurecr.io
   RESOURCE_GROUP_NAME: rg-aca-revision-deploy
@@ -13,8 +16,9 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  add-revision:
     runs-on: ubuntu-18.04
+    if: github.event.action == 'opened'
 
     steps:
       - name: Checkout to the branch
@@ -56,3 +60,23 @@ jobs:
           revision-name-suffix: ${{ env.SHORT_SHA }}
           image: ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
 
+  deactivate-revision:
+    runs-on: ubuntu-18.04
+    if: github.event.action == 'closed'
+
+    steps:
+      - name: Set short version of Commit hash  to env
+        run: | 
+          echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
+          echo "SHORT_SHA=${SHA:0:7}" >> $GITHUB_ENV
+        env:
+          SHA: ${{ github.event.pull_request.head.sha }}
+
+      - name: Deactivate Preview revision on ACA
+        uses: horihiro/aca-preview@v0.0.1-alpha2
+        with:
+          resource-group: ${{ env.RESOURCE_GROUP_NAME }}
+          name: ${{ env.CONTAINERAPP_NAME }}
+          revision-name-suffix: ${{ env.SHORT_SHA }}
+          image: "ANY_VALUE" # ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
+          deactivate-revision-mode: true
