@@ -67,7 +67,7 @@ jobs:
         with:
           issue-number: ${{ env.PR_NUMBER }}
           body: |
-            ${{ steps.aca_new_revision,outputs.app-url }}
+            ${{ steps.aca_new_revision.outputs.app-url }}
 
   deactivate-revision:
     runs-on: ubuntu-18.04
