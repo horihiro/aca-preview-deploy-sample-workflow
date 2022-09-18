@@ -31,6 +31,7 @@ jobs:
         run: | 
           echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
+          echo "PR_NUMBER=$(echo $GITHUB_REF | sed -e 's/[^0-9]//g')"
 
       - name: Log in to container registry
         uses: docker/login-action@v1
@@ -54,11 +55,19 @@ jobs:
       
       - name: Add revision to ACA
         uses: horihiro/aca-preview@v0.0.1-alpha2
+        id: aca_new_revision
         with:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
           name: ${{ env.CONTAINERAPP_NAME }}
           revision-name-suffix: ${{ env.SHORT_SHA }}
           image: ${{ env.CONTAINER_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
+
+      - name: add new comment to PR
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ env.PR_NUMBER }}
+          body: |
+            ${{ steps.aca_new_revision,outputs.app-url }}
 
   deactivate-revision:
     runs-on: ubuntu-18.04
@@ -69,6 +78,7 @@ jobs:
         run: | 
           echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
           echo "SHORT_SHA=${SHA:0:7}" >> $GITHUB_ENV
+          echo ${SHORT_SHA}
         env:
           SHA: ${{ github.event.pull_request.head.sha }}
 
