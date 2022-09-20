@@ -1,3 +1,3 @@
 # This is test image
 FROM wouterm/helloworld:latest
-ENV MSG='Reopened.'
+ENV MSG='Reopened again.'
