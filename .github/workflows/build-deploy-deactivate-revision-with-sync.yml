@@ -2,7 +2,7 @@ name: Build, Deploy and Deactivate ACA revision
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize, closed]
+    types: [opened, synchronize, closed]
 
 permissions:
   # for `create-or-update-comment` action
@@ -75,7 +75,7 @@ jobs:
 
   deactivate-revision:
     runs-on: ubuntu-18.04
-    if: github.event.action != 'opened' && github.event.action != 'reopened'
+    if: github.event.action != 'opened'
 
     steps:
       - name: Set short version of Commit hash  to env
