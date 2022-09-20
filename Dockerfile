@@ -1,3 +1,3 @@
 # This is test image
 FROM wouterm/helloworld:latest
-ENV MSG='Reopened again.'
+ENV MSG='Pull request created.'
