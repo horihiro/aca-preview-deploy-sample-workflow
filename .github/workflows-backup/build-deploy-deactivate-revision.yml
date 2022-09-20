@@ -114,4 +114,4 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           edit-mode: replace
           body: |
-            Reivision ${{ env.CONTAINERAPP_NAME }}--${{ env.SHORT_HASH }} is deactivated.
+            Revision ${{ env.CONTAINERAPP_NAME }}--${{ env.SHORT_HASH }} is deactivated.
