@@ -1,3 +1,3 @@
-# `Azure/aca-preview` sample workflow
+# `Azure/aca-review-apps` sample workflow
 
-This repository includes a sample workflow that uses [Azure/aca-preview](https://github.com/Azure/aca-preview) action.
+This repository includes a sample workflow that uses [Azure/aca-review-apps](https://github.com/Azure/aca-review-apps) action.
