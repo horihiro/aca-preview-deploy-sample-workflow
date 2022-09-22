@@ -59,7 +59,7 @@ jobs:
       
       - name: Add revision to ACA
         # uses: Azure/aca-review-apps@v0.1.0
-        uses: horihiro/aca-preview@v0.2.0-alpha1
+        uses: horihiro/aca-preview@v0.2.0-alpha2
         id: aca_new_revision
         with:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
@@ -98,7 +98,7 @@ jobs:
       
       - name: Deactivate Preview revision on ACA
         # uses: Azure/aca-review-apps@v0.1.0
-        uses: horihiro/aca-preview@v0.2.0-alpha1
+        uses: horihiro/aca-preview@v0.2.0-alpha2
         with:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
           name: ${{ env.CONTAINERAPP_NAME }}
